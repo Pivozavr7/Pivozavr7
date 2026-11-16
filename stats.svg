@@ -19,16 +19,12 @@
   <text x="28" y="52" class="h">Pivozavr7</text>
   <text x="28" y="74" class="sub">статистика GitHub</text>
 
-  <rect class="chip" x="600" y="28" width="212" height="36" rx="18"/>
-  <path class="tick" d="M618 46l4.500 4.500 8-9"/>
-  <text x="728" y="51" class="chipt" text-anchor="middle">не вайбкод, всё сам</text>
-
   <g class="tile" style="animation-delay:.05s"><rect x="24" y="96" width="148" height="112" rx="20" fill="var(--a)"/>
     <text x="98" y="150" class="n" fill="var(--ao)">4</text><text x="98" y="180" class="l" fill="var(--ao)">Репозитории</text></g>
   <g class="tile" style="animation-delay:.15s"><rect x="184" y="96" width="148" height="112" rx="20" fill="var(--b)"/>
     <text x="258" y="150" class="n" fill="var(--bo)">0</text><text x="258" y="180" class="l" fill="var(--bo)">Звёзды</text></g>
   <g class="tile" style="animation-delay:.25s"><rect x="344" y="96" width="148" height="112" rx="20" fill="var(--c)"/>
-    <text x="418" y="150" class="n" fill="var(--co)">55</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
+    <text x="418" y="150" class="n" fill="var(--co)">60</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
   <g class="tile" style="animation-delay:.35s"><rect x="504" y="96" width="148" height="112" rx="20" fill="var(--d)"/>
     <text x="578" y="150" class="n" fill="var(--do)">0</text><text x="578" y="180" class="l" fill="var(--do)">Pull request’ы</text></g>
   <g class="tile" style="animation-delay:.45s"><rect x="664" y="96" width="148" height="112" rx="20" fill="var(--e)"/>
