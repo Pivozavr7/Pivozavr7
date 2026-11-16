@@ -1,0 +1,19 @@
+<svg width="495" height="195" viewBox="0 0 495 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .t{font:600 18px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
+    .l{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
+    .v{font:700 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
+    .b{font:800 26px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
+    .s{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#00aeff}
+  </style>
+  <rect x=".5" y=".5" width="494" height="194" rx="4.5" fill="#1f2023"/>
+  <text x="25" y="35" class="t">Pivozavr7: статистика</text>
+  <text x="25" y="76" class="l">Репозиториев</text><text x="230" y="76" class="v" text-anchor="end">4</text>
+  <text x="25" y="101" class="l">Звёзд</text><text x="230" y="101" class="v" text-anchor="end">0</text>
+  <text x="25" y="126" class="l">Коммитов</text><text x="230" y="126" class="v" text-anchor="end">52</text>
+  <text x="25" y="151" class="l">Pull request’ов</text><text x="230" y="151" class="v" text-anchor="end">0</text>
+  <text x="25" y="176" class="l">Issues</text><text x="230" y="176" class="v" text-anchor="end">0</text>
+  <text x="360" y="95" class="b" text-anchor="middle">не вайбкод</text>
+  <text x="360" y="125" class="b" text-anchor="middle">всё сам</text>
+  <text x="360" y="155" class="s" text-anchor="middle">✓ ✓ ✓</text>
+</svg>
