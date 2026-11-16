@@ -20,6 +20,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          BIO="Пишу на Rust и Zig. Сам, (НЕ)руками. это тоже кстати"
+          TG="@Vedmost"
+          SITE="pivozavr7.github.io"
+
           U="${{ github.repository_owner }}"
           repos=$(gh api "users/$U" --jq .public_repos || echo 0)
           stars=$(gh api --paginate "users/$U/repos?per_page=100" --jq '.[].stargazers_count' | awk '{s+=$1} END{print s+0}')
@@ -27,27 +31,42 @@ jobs:
           prs=$(gh api "search/issues?q=author:$U+type:pr" --jq .total_count || echo 0)
           issues=$(gh api "search/issues?q=author:$U+type:issue" --jq .total_count || echo 0)
 
+          langs=$(gh api --paginate "users/$U/repos?per_page=100" --jq '.[] | select(.fork==false) | .name' \
+            | while read -r r; do gh api "repos/$U/$r/languages" || true; done \
+            | jq -s -r 'reduce .[] as $o ({}; reduce ($o|to_entries[]) as $e (.; .[$e.key] += $e.value)) | to_entries | sort_by(-.value) | .[:5][] | "\(.key)\t\(.value)"')
+
+          donut=$(echo "$langs" | awk -F'\t' -v C=376.99 'BEGIN{split("#7F67BE #E8618C #5BAA3C #3F8FD2 #E2A400",col," ")}
+            NF>=2{n[++k]=$1; v[k]=$2; t+=$2}
+            END{off=0; for(i=1;i<=k;i++){d=v[i]/t*C; dd=(d>4)?d-2:d;
+              printf "<circle cx=\"150\" cy=\"384\" r=\"60\" fill=\"none\" stroke=\"%s\" stroke-width=\"26\" stroke-dasharray=\"%.2f %.2f\" stroke-dashoffset=\"%.2f\" transform=\"rotate(-90 150 384)\"/>\n", col[i], dd, C-dd, -off; off+=d}}')
+
+          legend=$(echo "$langs" | awk -F'\t' 'BEGIN{split("#7F67BE #E8618C #5BAA3C #3F8FD2 #E2A400",col," ")}
+            NF>=2{n[++k]=$1; v[k]=$2; t+=$2}
+            END{for(i=1;i<=k;i++){y=336+(i-1)*28;
+              printf "<circle cx=\"262\" cy=\"%d\" r=\"6\" fill=\"%s\"/><text x=\"278\" y=\"%d\" class=\"lg\">%s · %d%%</text>\n", y-5, col[i], y, n[i], v[i]/t*100+0.5}}')
+
           cat > stats.svg <<EOF
-          <svg width="840" height="232" viewBox="0 0 840 232" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Статистика GitHub: $U">
+          <svg width="840" height="508" viewBox="0 0 840 508" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Статистика GitHub: $U">
             <style>
-              :root{--bg:#F3EDF7;--text:#1D1B20;--sub:#49454F;--chip:#EADDFF;--chipt:#21005D;
+              :root{--bg:#F3EDF7;--panel:#E7E0EC;--text:#1D1B20;--sub:#49454F;--chip:#EADDFF;--chipt:#21005D;
                 --a:#EADDFF;--ao:#21005D;--b:#FFD8E4;--bo:#31111D;--c:#B7F397;--co:#0C2000;--d:#D3E3FD;--do:#001C3B;--e:#FFE08C;--eo:#261A00}
-              @media (prefers-color-scheme:dark){:root{--bg:#211F26;--text:#E6E0E9;--sub:#CAC4D0;--chip:#4F378B;--chipt:#EADDFF;
+              @media (prefers-color-scheme:dark){:root{--bg:#211F26;--panel:#2B2930;--text:#E6E0E9;--sub:#CAC4D0;--chip:#4F378B;--chipt:#EADDFF;
                 --a:#4F378B;--ao:#EADDFF;--b:#633B48;--bo:#FFD8E4;--c:#2D5016;--co:#B7F397;--d:#284777;--do:#D3E3FD;--e:#5B4300;--eo:#FFE08C}}
               .bg{fill:var(--bg)}
               .h{font:600 28px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--text)}
-              .sub{font:500 14px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--sub)}
+              .sub{font:500 15px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--sub)}
               .chip{fill:var(--chip)}
               .chipt{font:600 15px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--chipt)}
-              .tick{stroke:var(--chipt);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
               .n{font:600 40px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;text-anchor:middle}
               .l{font:500 14px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;text-anchor:middle}
+              .lg{font:500 15px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--text)}
+              .ct{font:600 15px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif}
               .tile{opacity:0;animation:up .5s cubic-bezier(.2,0,0,1) forwards}
               @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
             </style>
-            <rect class="bg" width="840" height="232" rx="28"/>
+            <rect class="bg" width="840" height="508" rx="28"/>
             <text x="28" y="52" class="h">$U</text>
-            <text x="28" y="74" class="sub">статистика GitHub</text>
+            <text x="28" y="76" class="sub">$BIO</text>
 
             <g class="tile" style="animation-delay:.05s"><rect x="24" y="96" width="148" height="112" rx="20" fill="var(--a)"/>
               <text x="98" y="150" class="n" fill="var(--ao)">$repos</text><text x="98" y="180" class="l" fill="var(--ao)">Репозитории</text></g>
@@ -59,6 +78,22 @@ jobs:
               <text x="578" y="150" class="n" fill="var(--do)">$prs</text><text x="578" y="180" class="l" fill="var(--do)">Pull request’ы</text></g>
             <g class="tile" style="animation-delay:.45s"><rect x="664" y="96" width="148" height="112" rx="20" fill="var(--e)"/>
               <text x="738" y="150" class="n" fill="var(--eo)">$issues</text><text x="738" y="180" class="l" fill="var(--eo)">Issues</text></g>
+
+            <g class="tile" style="animation-delay:.6s"><rect class="chip" x="24" y="224" width="788" height="44" rx="22"/>
+              <text x="52" y="252" class="chipt">Дней без вайбкода</text>
+              <text x="784" y="252" class="chipt" text-anchor="end">0 · всегда</text></g>
+
+            <g class="tile" style="animation-delay:.75s">
+              <rect x="24" y="284" width="788" height="200" rx="24" fill="var(--panel)"/>
+              <circle cx="150" cy="384" r="60" fill="none" stroke="var(--bg)" stroke-width="26"/>
+              $donut
+              <text x="150" y="389" class="l" fill="var(--sub)">языки</text>
+              $legend
+              <rect x="540" y="330" width="244" height="44" rx="22" fill="var(--a)"/>
+              <text x="562" y="358" class="ct" fill="var(--ao)">Telegram · $TG</text>
+              <rect x="540" y="388" width="244" height="44" rx="22" fill="var(--b)"/>
+              <text x="562" y="416" class="ct" fill="var(--bo)">Сайт · $SITE</text>
+            </g>
           </svg>
           EOF
 
