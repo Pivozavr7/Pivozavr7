@@ -25,7 +25,7 @@
   <g class="tile" style="animation-delay:.15s"><rect x="184" y="96" width="148" height="112" rx="20" fill="var(--b)"/>
     <text x="258" y="150" class="n" fill="var(--bo)">0</text><text x="258" y="180" class="l" fill="var(--bo)">Звёзды</text></g>
   <g class="tile" style="animation-delay:.25s"><rect x="344" y="96" width="148" height="112" rx="20" fill="var(--c)"/>
-    <text x="418" y="150" class="n" fill="var(--co)">61</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
+    <text x="418" y="150" class="n" fill="var(--co)">64</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
   <g class="tile" style="animation-delay:.35s"><rect x="504" y="96" width="148" height="112" rx="20" fill="var(--d)"/>
     <text x="578" y="150" class="n" fill="var(--do)">0</text><text x="578" y="180" class="l" fill="var(--do)">Pull request’ы</text></g>
   <g class="tile" style="animation-delay:.45s"><rect x="664" y="96" width="148" height="112" rx="20" fill="var(--e)"/>
@@ -38,19 +38,19 @@
   <g class="tile" style="animation-delay:.75s">
     <rect x="24" y="284" width="788" height="200" rx="24" fill="var(--panel)"/>
     <circle cx="150" cy="384" r="60" fill="none" stroke="var(--bg)" stroke-width="26"/>
-    <circle cx="150" cy="384" r="60" fill="none" stroke="#7F67BE" stroke-width="26" stroke-dasharray="160.65 216.34" stroke-dashoffset="-0.00" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#E8618C" stroke-width="26" stroke-dasharray="146.22 230.77" stroke-dashoffset="-162.65" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#5BAA3C" stroke-width="26" stroke-dasharray="30.25 346.74" stroke-dashoffset="-310.86" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#3F8FD2" stroke-width="26" stroke-dasharray="25.88 351.11" stroke-dashoffset="-343.11" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#E2A400" stroke-width="26" stroke-dasharray="4.00 372.99" stroke-dashoffset="-370.99" transform="rotate(-90 150 384)"/>
+    <circle cx="150" cy="384" r="60" fill="none" stroke="#7F67BE" stroke-width="26" stroke-dasharray="149.73 227.26" stroke-dashoffset="-0.00" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#E8618C" stroke-width="26" stroke-dasharray="136.27 240.72" stroke-dashoffset="-151.73" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#5BAA3C" stroke-width="26" stroke-dasharray="53.39 323.60" stroke-dashoffset="-290.00" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#3F8FD2" stroke-width="26" stroke-dasharray="24.00 352.99" stroke-dashoffset="-345.39" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#E2A400" stroke-width="26" stroke-dasharray="3.60 373.39" stroke-dashoffset="-371.39" transform="rotate(-90 150 384)"/>
     <text x="150" y="389" class="l" fill="var(--sub)">языки</text>
-    <circle cx="262" cy="331" r="6" fill="#7F67BE"/><text x="278" y="336" class="lg">Slint · 43%</text>
-<circle cx="262" cy="359" r="6" fill="#E8618C"/><text x="278" y="364" class="lg">Rust · 39%</text>
-<circle cx="262" cy="387" r="6" fill="#5BAA3C"/><text x="278" y="392" class="lg">Zig · 9%</text>
+    <circle cx="262" cy="331" r="6" fill="#7F67BE"/><text x="278" y="336" class="lg">Slint · 40%</text>
+<circle cx="262" cy="359" r="6" fill="#E8618C"/><text x="278" y="364" class="lg">Rust · 37%</text>
+<circle cx="262" cy="387" r="6" fill="#5BAA3C"/><text x="278" y="392" class="lg">Zig · 15%</text>
 <circle cx="262" cy="415" r="6" fill="#3F8FD2"/><text x="278" y="420" class="lg">Svelte · 7%</text>
-<circle cx="262" cy="443" r="6" fill="#E2A400"/><text x="278" y="448" class="lg">TypeScript · 2%</text>
+<circle cx="262" cy="443" r="6" fill="#E2A400"/><text x="278" y="448" class="lg">TypeScript · 1%</text>
     <rect x="540" y="330" width="244" height="44" rx="22" fill="var(--a)"/>
-    <text x="562" y="358" class="ct" fill="var(--ao)">Telegram · @Vedmost</text>
+    <text x="562" y="358" class="ct" fill="var(--ao)">Telegram · t.me/pkowwww</text>
     <rect x="540" y="388" width="244" height="44" rx="22" fill="var(--b)"/>
     <text x="562" y="416" class="ct" fill="var(--bo)">Сайт · pivozavr7.github.io</text>
   </g>
