@@ -1,0 +1,58 @@
+name: stats
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+  push:
+    paths: [".github/workflows/stats.yml"]
+
+permissions:
+  contents: write
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Собрать статистику и нарисовать SVG
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          U="${{ github.repository_owner }}"
+          repos=$(gh api "users/$U" --jq .public_repos)
+          stars=$(gh api --paginate "users/$U/repos?per_page=100" --jq '.[].stargazers_count' | awk '{s+=$1} END{print s+0}')
+          commits=$(gh api "search/commits?q=author:$U" --jq .total_count)
+          prs=$(gh api "search/issues?q=author:$U+type:pr" --jq .total_count)
+          issues=$(gh api "search/issues?q=author:$U+type:issue" --jq .total_count)
+
+          cat > stats.svg <<EOF
+          <svg width="495" height="195" viewBox="0 0 495 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <style>
+              .t{font:600 18px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
+              .l{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
+              .v{font:700 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
+              .b{font:800 26px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
+              .s{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#00aeff}
+            </style>
+            <rect x=".5" y=".5" width="494" height="194" rx="4.5" fill="#1f2023"/>
+            <text x="25" y="35" class="t">$U: статистика</text>
+            <text x="25" y="76" class="l">Репозиториев</text><text x="230" y="76" class="v" text-anchor="end">$repos</text>
+            <text x="25" y="101" class="l">Звёзд</text><text x="230" y="101" class="v" text-anchor="end">$stars</text>
+            <text x="25" y="126" class="l">Коммитов</text><text x="230" y="126" class="v" text-anchor="end">$commits</text>
+            <text x="25" y="151" class="l">Pull request’ов</text><text x="230" y="151" class="v" text-anchor="end">$prs</text>
+            <text x="25" y="176" class="l">Issues</text><text x="230" y="176" class="v" text-anchor="end">$issues</text>
+            <text x="360" y="95" class="b" text-anchor="middle">не вайбкод</text>
+            <text x="360" y="125" class="b" text-anchor="middle">всё сам</text>
+            <text x="360" y="155" class="s" text-anchor="middle">✓ ✓ ✓</text>
+          </svg>
+          EOF
+          sed -i 's/^          //' stats.svg
+
+      - name: Закоммитить, если изменилось
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats.svg
+          git diff --cached --quiet || (git commit -m "обновил статистику" && git push)
