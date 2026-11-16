@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           BIO="Пишу на Rust и Zig. Сам, (НЕ)руками. это тоже кстати"
-          TG="@Vedmost"
+          TG="t.me/pkowwww"
           SITE="pivozavr7.github.io"
 
           U="${{ github.repository_owner }}"
