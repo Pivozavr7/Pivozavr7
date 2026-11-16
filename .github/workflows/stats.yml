@@ -49,10 +49,6 @@ jobs:
             <text x="28" y="52" class="h">$U</text>
             <text x="28" y="74" class="sub">статистика GitHub</text>
 
-            <rect class="chip" x="600" y="28" width="212" height="36" rx="18"/>
-            <path class="tick" d="M618 46l4.500 4.500 8-9"/>
-            <text x="728" y="51" class="chipt" text-anchor="middle">не вайбкод, всё сам</text>
-
             <g class="tile" style="animation-delay:.05s"><rect x="24" y="96" width="148" height="112" rx="20" fill="var(--a)"/>
               <text x="98" y="150" class="n" fill="var(--ao)">$repos</text><text x="98" y="180" class="l" fill="var(--ao)">Репозитории</text></g>
             <g class="tile" style="animation-delay:.15s"><rect x="184" y="96" width="148" height="112" rx="20" fill="var(--b)"/>
