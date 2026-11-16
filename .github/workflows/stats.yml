@@ -21,34 +21,50 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           U="${{ github.repository_owner }}"
-          repos=$(gh api "users/$U" --jq .public_repos)
+          repos=$(gh api "users/$U" --jq .public_repos || echo 0)
           stars=$(gh api --paginate "users/$U/repos?per_page=100" --jq '.[].stargazers_count' | awk '{s+=$1} END{print s+0}')
-          commits=$(gh api "search/commits?q=author:$U" --jq .total_count)
-          prs=$(gh api "search/issues?q=author:$U+type:pr" --jq .total_count)
-          issues=$(gh api "search/issues?q=author:$U+type:issue" --jq .total_count)
+          commits=$(gh api "search/commits?q=author:$U" --jq .total_count || echo 0)
+          prs=$(gh api "search/issues?q=author:$U+type:pr" --jq .total_count || echo 0)
+          issues=$(gh api "search/issues?q=author:$U+type:issue" --jq .total_count || echo 0)
 
           cat > stats.svg <<EOF
-          <svg width="495" height="195" viewBox="0 0 495 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="840" height="232" viewBox="0 0 840 232" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Статистика GitHub: $U">
             <style>
-              .t{font:600 18px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
-              .l{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
-              .v{font:700 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#bcb28d}
-              .b{font:800 26px 'Segoe UI',Ubuntu,Sans-Serif;fill:#e03c8a}
-              .s{font:600 14px 'Segoe UI',Ubuntu,Sans-Serif;fill:#00aeff}
+              :root{--bg:#F3EDF7;--text:#1D1B20;--sub:#49454F;--chip:#EADDFF;--chipt:#21005D;
+                --a:#EADDFF;--ao:#21005D;--b:#FFD8E4;--bo:#31111D;--c:#B7F397;--co:#0C2000;--d:#D3E3FD;--do:#001C3B;--e:#FFE08C;--eo:#261A00}
+              @media (prefers-color-scheme:dark){:root{--bg:#211F26;--text:#E6E0E9;--sub:#CAC4D0;--chip:#4F378B;--chipt:#EADDFF;
+                --a:#4F378B;--ao:#EADDFF;--b:#633B48;--bo:#FFD8E4;--c:#2D5016;--co:#B7F397;--d:#284777;--do:#D3E3FD;--e:#5B4300;--eo:#FFE08C}}
+              .bg{fill:var(--bg)}
+              .h{font:600 28px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--text)}
+              .sub{font:500 14px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--sub)}
+              .chip{fill:var(--chip)}
+              .chipt{font:600 15px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;fill:var(--chipt)}
+              .tick{stroke:var(--chipt);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+              .n{font:600 40px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;text-anchor:middle}
+              .l{font:500 14px Roboto,'Google Sans','Segoe UI',Ubuntu,sans-serif;text-anchor:middle}
+              .tile{opacity:0;animation:up .5s cubic-bezier(.2,0,0,1) forwards}
+              @keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
             </style>
-            <rect x=".5" y=".5" width="494" height="194" rx="4.5" fill="#1f2023"/>
-            <text x="25" y="35" class="t">$U: статистика</text>
-            <text x="25" y="76" class="l">Репозиториев</text><text x="230" y="76" class="v" text-anchor="end">$repos</text>
-            <text x="25" y="101" class="l">Звёзд</text><text x="230" y="101" class="v" text-anchor="end">$stars</text>
-            <text x="25" y="126" class="l">Коммитов</text><text x="230" y="126" class="v" text-anchor="end">$commits</text>
-            <text x="25" y="151" class="l">Pull request’ов</text><text x="230" y="151" class="v" text-anchor="end">$prs</text>
-            <text x="25" y="176" class="l">Issues</text><text x="230" y="176" class="v" text-anchor="end">$issues</text>
-            <text x="360" y="95" class="b" text-anchor="middle">не вайбкод</text>
-            <text x="360" y="125" class="b" text-anchor="middle">всё сам</text>
-            <text x="360" y="155" class="s" text-anchor="middle">✓ ✓ ✓</text>
+            <rect class="bg" width="840" height="232" rx="28"/>
+            <text x="28" y="52" class="h">$U</text>
+            <text x="28" y="74" class="sub">статистика GitHub</text>
+
+            <rect class="chip" x="600" y="28" width="212" height="36" rx="18"/>
+            <path class="tick" d="M618 46l4.500 4.500 8-9"/>
+            <text x="728" y="51" class="chipt" text-anchor="middle">не вайбкод, всё сам</text>
+
+            <g class="tile" style="animation-delay:.05s"><rect x="24" y="96" width="148" height="112" rx="20" fill="var(--a)"/>
+              <text x="98" y="150" class="n" fill="var(--ao)">$repos</text><text x="98" y="180" class="l" fill="var(--ao)">Репозитории</text></g>
+            <g class="tile" style="animation-delay:.15s"><rect x="184" y="96" width="148" height="112" rx="20" fill="var(--b)"/>
+              <text x="258" y="150" class="n" fill="var(--bo)">$stars</text><text x="258" y="180" class="l" fill="var(--bo)">Звёзды</text></g>
+            <g class="tile" style="animation-delay:.25s"><rect x="344" y="96" width="148" height="112" rx="20" fill="var(--c)"/>
+              <text x="418" y="150" class="n" fill="var(--co)">$commits</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
+            <g class="tile" style="animation-delay:.35s"><rect x="504" y="96" width="148" height="112" rx="20" fill="var(--d)"/>
+              <text x="578" y="150" class="n" fill="var(--do)">$prs</text><text x="578" y="180" class="l" fill="var(--do)">Pull request’ы</text></g>
+            <g class="tile" style="animation-delay:.45s"><rect x="664" y="96" width="148" height="112" rx="20" fill="var(--e)"/>
+              <text x="738" y="150" class="n" fill="var(--eo)">$issues</text><text x="738" y="180" class="l" fill="var(--eo)">Issues</text></g>
           </svg>
           EOF
-          sed -i 's/^          //' stats.svg
 
       - name: Закоммитить, если изменилось
         run: |
