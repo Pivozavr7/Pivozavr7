@@ -25,7 +25,7 @@
   <g class="tile" style="animation-delay:.15s"><rect x="184" y="96" width="148" height="112" rx="20" fill="var(--b)"/>
     <text x="258" y="150" class="n" fill="var(--bo)">0</text><text x="258" y="180" class="l" fill="var(--bo)">Звёзды</text></g>
   <g class="tile" style="animation-delay:.25s"><rect x="344" y="96" width="148" height="112" rx="20" fill="var(--c)"/>
-    <text x="418" y="150" class="n" fill="var(--co)">108</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
+    <text x="418" y="150" class="n" fill="var(--co)">109</text><text x="418" y="180" class="l" fill="var(--co)">Коммиты</text></g>
   <g class="tile" style="animation-delay:.35s"><rect x="504" y="96" width="148" height="112" rx="20" fill="var(--d)"/>
     <text x="578" y="150" class="n" fill="var(--do)">0</text><text x="578" y="180" class="l" fill="var(--do)">Pull request’ы</text></g>
   <g class="tile" style="animation-delay:.45s"><rect x="664" y="96" width="148" height="112" rx="20" fill="var(--e)"/>
@@ -38,10 +38,10 @@
   <g class="tile" style="animation-delay:.75s">
     <rect x="24" y="284" width="788" height="200" rx="24" fill="var(--panel)"/>
     <circle cx="150" cy="384" r="60" fill="none" stroke="var(--bg)" stroke-width="26"/>
-    <circle cx="150" cy="384" r="60" fill="none" stroke="#7F67BE" stroke-width="26" stroke-dasharray="127.49 249.50" stroke-dashoffset="-0.00" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#E8618C" stroke-width="26" stroke-dasharray="116.00 260.99" stroke-dashoffset="-129.49" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#5BAA3C" stroke-width="26" stroke-dasharray="98.76 278.23" stroke-dashoffset="-247.48" transform="rotate(-90 150 384)"/>
-<circle cx="150" cy="384" r="60" fill="none" stroke="#3F8FD2" stroke-width="26" stroke-dasharray="20.19 356.80" stroke-dashoffset="-348.24" transform="rotate(-90 150 384)"/>
+    <circle cx="150" cy="384" r="60" fill="none" stroke="#7F67BE" stroke-width="26" stroke-dasharray="127.42 249.57" stroke-dashoffset="-0.00" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#E8618C" stroke-width="26" stroke-dasharray="115.94 261.05" stroke-dashoffset="-129.42" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#5BAA3C" stroke-width="26" stroke-dasharray="98.89 278.10" stroke-dashoffset="-247.36" transform="rotate(-90 150 384)"/>
+<circle cx="150" cy="384" r="60" fill="none" stroke="#3F8FD2" stroke-width="26" stroke-dasharray="20.18 356.81" stroke-dashoffset="-348.25" transform="rotate(-90 150 384)"/>
 <circle cx="150" cy="384" r="60" fill="none" stroke="#E2A400" stroke-width="26" stroke-dasharray="4.56 372.43" stroke-dashoffset="-370.43" transform="rotate(-90 150 384)"/>
     <text x="150" y="389" class="l" fill="var(--sub)">языки</text>
     <circle cx="262" cy="331" r="6" fill="#7F67BE"/><text x="278" y="336" class="lg">Slint · 34%</text>
