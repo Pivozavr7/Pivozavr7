@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="236" viewBox="0 0 640 236" role="img" aria-label="Pivozavr7: Пишу на Rust и Zig. Всё сам. Вайбкод выключен"><title>Pivozavr7: Пишу на Rust и Zig. Всё сам. Вайбкод выключен</title><style>text{font-family:Inter,'Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',Arial,sans-serif}.t{font-size:15px;font-weight:600;fill:#e9ece9}.s{font-size:12.5px;fill:#8f938f}.v{font-size:18px;font-weight:600;fill:#e9ece9}.b{font-size:13px;font-weight:500;fill:#e9ece9}.cap{font-size:13px;font-weight:500;fill:#7a7e7a}.n{font-size:36px;font-weight:700;fill:#e9ece9}.c{font-size:12.5px;fill:#cfd3cf}</style><rect x="1" y="1" width="638" height="234" rx="20" fill="#090c09" stroke="#b6f1b8" stroke-width="2"/><text class="n" x="32" y="70">Pivozavr7</text><text class="s" x="32" y="98" style="font-size:15px">Пишу на Rust и Zig. Всё сам.</text><rect x="32" y="114" width="55" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="45" y="132">Rust</text><rect x="95" y="114" width="48" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="108" y="132">Zig</text><rect x="151" y="114" width="63" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="164" y="132">Slint</text><rect x="24" y="158" width="592" height="54" rx="12" fill="#151815" stroke="#232723"/><text class="t" x="42" y="182">Вайбкод</text><text class="s" x="42" y="199">Всё пишу руками</text><text class="s" x="544" y="190" text-anchor="end">Выключен</text><rect x="554" y="171" width="44" height="24" rx="12" fill="#2a2d2a" stroke="#454845"/><circle cx="566" cy="183" r="8" fill="#8f938f"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="222" viewBox="0 0 640 222" role="img" aria-label="Pivozavr7: Пишу на Rust и Zig. Сам, (НЕ)руками. НЕ вайбкод, всё сам">
+<title>Pivozavr7: Пишу на Rust и Zig. Сам, (НЕ)руками. НЕ вайбкод, всё сам</title>
+<style>
+text{font-family:Inter,'Segoe UI',system-ui,-apple-system,Roboto,'Helvetica Neue',Arial,sans-serif}
+.t{font-size:15px;font-weight:600;fill:#e9ece9}
+.s{font-size:12.5px;fill:#8f938f}
+.n{font-size:36px;font-weight:700;fill:#e9ece9}
+.c{font-size:12.5px;fill:#cfd3cf}
+</style>
+<rect x="1" y="1" width="638" height="220" rx="20" fill="#090c09" stroke="#b6f1b8" stroke-width="2"/>
+<text class="n" x="32" y="70">Pivozavr7</text>
+<text class="s" x="32" y="98" style="font-size:15px">Пишу на Rust и Zig. Сам, (НЕ)руками.</text>
+<rect x="32" y="114" width="55" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="45" y="132">Rust</text>
+<rect x="95" y="114" width="48" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="108" y="132">Zig</text>
+<rect x="151" y="114" width="63" height="28" rx="14" fill="#151815" stroke="#454845"/><text class="c" x="164" y="132">Slint</text>
+<text class="t" x="32" y="189" style="font-size:20px">НЕ вайбкод, всё сам</text>
+<circle cx="594" cy="182" r="14" fill="#b6f1b8"/><path d="M588 182.5l4.5 4.5 8-9" stroke="#0c2000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="558" cy="182" r="14" fill="#b6f1b8"/><path d="M552 182.5l4.5 4.5 8-9" stroke="#0c2000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="522" cy="182" r="14" fill="#b6f1b8"/><path d="M516 182.5l4.5 4.5 8-9" stroke="#0c2000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
