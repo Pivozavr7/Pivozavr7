@@ -5,9 +5,12 @@
 <!-- BANNER:END -->
 
 <!-- REPOS:START -->
+<img src="assets/cap-projects.svg" alt="Проекты" width="640">
+<a href="https://github.com/Pivozavr7/ZiGram"><img src="assets/repo-0.svg" alt="ZiGram: Native Telegram client in Zig: TDLib JSON core, Dear ImGui + SDL3 GPU UI (pre-alpha)" width="640"></a>
 <!-- REPOS:END -->
 
 <!-- STATS:START -->
+<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 109 коммитов. Языки: Slint 34%, Rust 31%, Zig 27%, Svelte 6%, C++ 2%" width="640"></a>
 <!-- STATS:END -->
 
 <!-- LINKS:START -->
