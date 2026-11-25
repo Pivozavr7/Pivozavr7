@@ -10,7 +10,7 @@
 <!-- REPOS:END -->
 
 <!-- STATS:START -->
-<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 111 коммитов. Языки: Slint 34%, Rust 31%, Zig 27%, Svelte 6%, C++ 2%" width="640"></a>
+<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 114 коммитов. Языки: Slint 34%, Rust 31%, Zig 27%, Svelte 6%, C++ 2%" width="640"></a>
 <!-- STATS:END -->
 
 <!-- LINKS:START -->
