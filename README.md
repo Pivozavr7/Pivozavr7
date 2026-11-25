@@ -13,7 +13,11 @@
 <!-- STATS:END -->
 
 <!-- SNAKE:START -->
-<img src="assets/snake.svg" alt="Змейка ест коммиты за год: 10 дней с активностью" width="640">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/github-contribution-grid-snake.svg">
+  <img src="assets/github-contribution-grid-snake.svg" alt="Змейка ползёт по вкладам за год" width="640">
+</picture>
 <!-- SNAKE:END -->
 
 <!-- LINKS:START -->
