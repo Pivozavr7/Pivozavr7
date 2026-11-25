@@ -13,16 +13,18 @@ from pathlib import Path
 OWNER = os.environ.get("OWNER") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Pivozavr7"
 
 # ───────────────────────────── Настройки ─────────────────────────────
-BIO = "Пишу на Rust и Zig. Всё сам."
+BIO = "Не пишу руками на Rust и Zig"
 STACK = ["Rust", "Zig", "Slint"]
-VIBE = ("Вайбкод", "Всё пишу руками", "Выключен")          # заголовок, подпись, текст статус-чипа справа
+VIBE = ("Не вайбкод", "Всё сам")                             # заголовок и подпись строки в баннере; справа три галочки
 SITE = "https://pivozavr7.github.io"                         # куда ведёт баннер
 LINKS = [                                                    # иконки: send, globe, repo
     dict(icon="send",  title="Telegram",        sub="t.me/pkowwww",            url="https://t.me/pkowwww", btn="Написать"),
     dict(icon="globe", title="Сайт",            sub="pivozavr7.github.io",     url=SITE,                   btn="Открыть"),
-    dict(icon="repo",  title="Все репозитории", sub=f"github.com/{OWNER}",     url=f"https://github.com/{OWNER}?tab=repositories", btn="Смотреть"),
 ]
 REPO_LIMIT = 4        # сколько проектов показывать (берутся закреплённые, иначе недавние)
+SNAKE = True          # змейка из коммитов; картинки рисует workflow snake.yml и кладёт в ветку output
+SNAKE_URL = "https://raw.githubusercontent.com/%s/output" % (os.environ.get("GITHUB_REPOSITORY") or f"{OWNER}/{OWNER}")
+BANNER_ALT = f"{OWNER}: {BIO}. {VIBE[0]}, {VIBE[1]}"
 # ─────────────────────────────────────────────────────────────────────
 
 W = 640
@@ -31,7 +33,7 @@ C = dict(
     surface_c="#1b201b",       # surface container: фон карточек
     surface_ch="#252a25",      # surface container high: вложенные блоки
     on_surface="#e0e4dd", on_variant="#c1c9bf", outline_v="#414941",
-    primary="#b6f1b8", primary_c="#245031", on_primary_c="#c9f5cb",
+    primary="#b6f1b8", on_primary="#0a3917", primary_c="#245031", on_primary_c="#c9f5cb",
     secondary_c="#3b4b3d", on_secondary_c="#d2e8d3",
 )
 FONT = "Roboto,'Google Sans','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif"
@@ -45,6 +47,18 @@ CSS = (f"text{{font-family:{FONT}}}"
        f".lm{{font-size:12px;font-weight:500;fill:{C['on_variant']};letter-spacing:.5px}}"
        f".ll{{font-size:14px;font-weight:500;letter-spacing:.1px}}"
        f".v{{font-size:22px;font-weight:500;fill:{C['primary']}}}")
+# Анимации: галочки «выскакивают» и дорисовываются по очереди, кольцо пульсирует, точка «live» мигает.
+# По умолчанию всё видимо, так что при prefers-reduced-motion остаётся статичная картинка.
+CSS += ("@keyframes pop{0%{opacity:0;transform:scale(.4)}12%{opacity:1;transform:scale(1.18)}20%{transform:scale(1)}88%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}"
+        "@keyframes draw{0%,6%{stroke-dashoffset:22}24%,88%{stroke-dashoffset:0}100%{stroke-dashoffset:22}}"
+        "@keyframes ring{0%{opacity:.6;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.5)}}"
+        "@keyframes live{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}"
+        ".pop{transform-box:fill-box;transform-origin:center;animation:pop 5s cubic-bezier(.2,0,0,1) infinite backwards}"
+        ".tick{stroke-dasharray:22;animation:draw 5s ease-out infinite backwards}"
+        ".ring{opacity:0;transform-box:fill-box;transform-origin:center;animation:ring 2.5s ease-out infinite}"
+        ".live{transform-box:fill-box;transform-origin:center;animation:live 1.8s ease-in-out infinite}"
+        ".d1{animation-delay:.2s}.d2{animation-delay:.45s}.d3{animation-delay:.7s}"
+        "@media (prefers-reduced-motion:reduce){.pop,.tick,.ring,.live{animation:none}}")
 GREENS = ["#b6f1b8", "#8ec993", "#679f6e", "#8b938a", "#575f57"]
 ICONS = {
     "send": '<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
@@ -52,8 +66,7 @@ ICONS = {
     "repo": '<path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
     "ext": '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     "star": '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/>',
-    "pen": '<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
-    "ban": '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>',
+    "activity": '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
 }
 MONTHS = "янв фев мар апр мая июн июл авг сен окт ноя дек".split()
 
@@ -90,6 +103,17 @@ def leading(name, x, y):                  # круглая иконка слев
             + ico(name, x + 10, y + 10, 20, C["on_primary_c"]))
 
 # ───────────────────────────── Карточки ─────────────────────────────
+def check_badge(cx, cy, r, cls):          # зелёный кружок с галочкой, анимированный
+    return (f'<g class="pop {cls}"><circle cx="{cx}" cy="{cy}" r="{r}" fill="{C["primary"]}"/>'
+            f'<path class="tick {cls}" d="M{cx - 5} {cy + .5}l3.4 3.5 7.1-7.5" fill="none" stroke="{C["on_primary"]}" '
+            f'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>')
+
+def leading_check(x, y):                  # иконка слева: круг с пульсирующим кольцом и рисующейся галочкой
+    return (f'<circle class="ring" cx="{x + 20}" cy="{y + 20}" r="20" fill="none" stroke="{C["primary"]}" stroke-width="2"/>'
+            f'<circle cx="{x + 20}" cy="{y + 20}" r="20" fill="{C["primary_c"]}"/>'
+            f'<g transform="translate({x + 10} {y + 10}) scale(.833)"><path class="tick" d="M5 12.5l4.5 4.5L19 7.5" fill="none" '
+            f'stroke="{C["on_primary_c"]}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>')
+
 def banner():
     h = 232
     body = card(W, h, 28)
@@ -103,16 +127,13 @@ def banner():
         body += (f'<rect x="{x + .5}" y="112.5" width="{cw - 1}" height="31" rx="8" fill="none" stroke="{C["outline_v"]}"/>'
                  f'<text class="ll" x="{x + 12}" y="133" fill="{C["on_surface"]}">{esc(s)}</text>')
         x += cw + 8
-    # строка «Вайбкод»: список с иконкой слева и статус-чипом справа, без переключателя
+    # строка «Не вайбкод»: список с анимированной галочкой слева и тремя галочками справа
     body += card(W - 32, 56, 16, C["surface_ch"], 16, 160)
-    body += leading("pen", 28, 168)
+    body += leading_check(28, 168)
     body += f'<text class="tm" x="84" y="184">{esc(VIBE[0])}</text><text class="bm" x="84" y="203">{esc(VIBE[1])}</text>'
-    cw = 12 + 18 + 8 + tw(VIBE[2]) + 16
-    cx = W - 32 - cw
-    body += (f'<rect x="{cx}" y="172" width="{cw}" height="32" rx="16" fill="{C["secondary_c"]}"/>'
-             + ico("ban", cx + 12, 181, 14, C["on_secondary_c"])
-             + f'<text class="ll" x="{cx + 12 + 14 + 8}" y="193" fill="{C["on_secondary_c"]}">{esc(VIBE[2])}</text>')
-    return svg(W, h, body, f"{OWNER}: {BIO} Вайбкод выключен")
+    for i, cls in enumerate(("d1", "d2", "d3")):
+        body += check_badge(W - 28 - 12 - (2 - i) * 32, 188, 12, cls)
+    return svg(W, h, body, BANNER_ALT)
 
 def caption(text):
     return svg(W, 30, f'<text class="tl" x="4" y="21">{esc(text)}</text>', text)
@@ -122,6 +143,18 @@ def link_card(it):
     body = (card(W, h) + leading(it["icon"], 16, 16) + f'<text class="tm" x="72" y="34">{esc(it["title"])}</text>'
             f'<text class="bm" x="72" y="54">{esc(it["sub"])}</text>' + tonal_button(W - 16, 16, it["btn"]))
     return svg(W, h, body, f'{it["title"]}: {it["sub"]}')
+
+def snake_card():                         # шапка секции со змейкой: иконка, текст и «живой» чип обновления
+    h = 72
+    label = "обновляется каждые 12 ч"
+    cw = 12 + 8 + 8 + tw(label) + 16
+    x = W - 16 - cw
+    body = (card(W, h) + leading("activity", 16, 16) + f'<text class="tm" x="72" y="34">Коммиты за год</text>'
+            f'<text class="bm" x="72" y="54">Змейка доедает мой вклад</text>'
+            f'<rect x="{x}" y="20" width="{cw}" height="32" rx="16" fill="{C["secondary_c"]}"/>'
+            f'<circle class="live" cx="{x + 18}" cy="36" r="4" fill="{C["primary"]}"/>'
+            f'<text class="ll" x="{x + 12 + 8 + 8}" y="41" fill="{C["on_secondary_c"]}">{label}</text>')
+    return svg(W, h, body, "Коммиты за год: змейка доедает мой вклад")
 
 def repo_card(r):
     h = 96
@@ -263,13 +296,21 @@ def main():
     put = lambda name, s: (out / name).write_text(s, encoding="utf-8")
 
     put("banner.svg", banner())
-    text = block(text, "BANNER", link(SITE, "assets/banner.svg", f"{OWNER}: {BIO} Вайбкод выключен"))
+    text = block(text, "BANNER", link(SITE, "assets/banner.svg", BANNER_ALT))
 
+    for f in out.glob("link-*.svg"): f.unlink()       # убираем карточки, которых больше нет в LINKS
     put("cap-links.svg", caption("Связь"))
     parts = [f'<img src="assets/cap-links.svg" alt="Связь" width="{W}">']
     for i, it in enumerate(LINKS):
         put(f"link-{i}.svg", link_card(it))
         parts.append(link(it["url"], f"assets/link-{i}.svg", f'{it["title"]}: {it["sub"]}'))
+    if SNAKE:
+        put("cap-snake.svg", caption("Активность"))
+        put("snake-card.svg", snake_card())
+        parts += [f'<img src="assets/cap-snake.svg" alt="Активность" width="{W}">',
+                  f'<img src="assets/snake-card.svg" alt="Коммиты за год: змейка доедает мой вклад" width="{W}">',
+                  f'<picture><source media="(prefers-color-scheme: dark)" srcset="{SNAKE_URL}/github-contribution-grid-snake-dark.svg">'
+                  f'<img src="{SNAKE_URL}/github-contribution-grid-snake.svg" alt="Змейка ест мои коммиты" width="{W}"></picture>']
     text = block(text, "LINKS", "\n".join(parts))
 
     if mode != "--static":
