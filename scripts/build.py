@@ -410,7 +410,7 @@ def ensure(text, name, before):            # добавляет маркеры �
 
 def main():
     mode = "--demo" if "--demo" in sys.argv else "--static" if "--static" in sys.argv else "live"
-    root = Path(os.environ.get("ROOT") or Path(____).resolve().parent.parent) if False else Path(os.environ.get("ROOT") or Path(__file__).resolve().parent.parent)
+    root = Path(os.environ.get("ROOT") or Path(__file__).resolve().parent.parent)
     out = root / "assets"; out.mkdir(exist_ok=True)
     readme = root / "README.md"
     text = readme.read_text(encoding="utf-8") if readme.exists() else TEMPLATE
