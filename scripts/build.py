@@ -1,3 +1,30 @@
+#!/usr/bin/env python3
+"""Собирает профиль GitHub в стиле Material Design 3: SVG-карточки и блоки README.
+
+  python scripts/build.py            боевой запуск, данные берутся из GitHub API
+  python scripts/build.py --static   только статичные карточки, без сети
+  python scripts/build.py --demo     выдуманные данные, для превью
+
+Всё, что можно менять руками, лежит в блоке «Настройки» ниже.
+"""
+import html, json, os, re, sys, urllib.request
+from pathlib import Path
+
+OWNER = os.environ.get("OWNER") or os.environ.get("GITHUB_REPOSITORY_OWNER") or "Pivozavr7"
+
+# ───────────────────────────── Настройки ─────────────────────────────
+BIO = "Пишу на Rust и Zig. Всё сам."
+STACK = ["Rust", "Zig", "Slint"]
+VIBE = ("Вайбкод", "Всё пишу руками", "Выключен")          # заголовок, подпись, текст статус-чипа справа
+SITE = "https://pivozavr7.github.io"                         # куда ведёт баннер
+LINKS = [                                                    # иконки: send, globe, repo
+    dict(icon="send",  title="Telegram",        sub="t.me/pkowwww",            url="https://t.me/pkowwww", btn="Написать"),
+    dict(icon="globe", title="Сайт",            sub="pivozavr7.github.io",     url=SITE,                   btn="Открыть"),
+    dict(icon="repo",  title="Все репозитории", sub=f"github.com/{OWNER}",     url=f"https://github.com/{OWNER}?tab=repositories", btn="Смотреть"),
+]
+REPO_LIMIT = 4        # сколько проектов показывать (берутся закреплённые, иначе недавние)
+# ─────────────────────────────────────────────────────────────────────
+
 W = 640
 # Цвета: тёмная схема Material Design 3, seed — зелёный. Имена как в спецификации MD3.
 C = dict(
@@ -153,3 +180,114 @@ def stats_svg(d):
            + (f', {fmt(d["commits"])} коммитов' if d.get("commits") is not None else "")
            + ". Языки: " + ", ".join(f"{k} {p:.0f}%" for k, p in langs))
     return svg(W, top + ph + 2, body, alt), alt
+
+# ───────────────────────────── Данные ─────────────────────────────
+TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+
+def call(path, body=None):
+    url = path if path.startswith("http") else "https://api.github.com" + path
+    h = {"Accept": "application/vnd.github+json", "User-Agent": "profile-build"}
+    if TOKEN: h["Authorization"] = f"Bearer {TOKEN}"
+    req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None, headers=h)
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)
+
+def safe(fn, default=None):
+    try: return fn()
+    except Exception as e:
+        print("warn:", e, file=sys.stderr); return default
+
+def fetch():
+    user = call(f"/users/{OWNER}")
+    repos, page = [], 1
+    while True:
+        chunk = call(f"/users/{OWNER}/repos?per_page=100&page={page}&sort=pushed")
+        repos += chunk
+        if len(chunk) < 100: break
+        page += 1
+    own = [r for r in repos if not r["fork"] and r["name"].lower() != OWNER.lower()]
+    langs = {}
+    for r in own:
+        for k, v in (safe(lambda: call(f"/repos/{OWNER}/{r['name']}/languages"), {}) or {}).items():
+            langs[k] = langs.get(k, 0) + v
+    q = "query($u:String!){user(login:$u){pinnedItems(first:6,types:REPOSITORY){nodes{...on Repository{name}}}}}"
+    pinned = safe(lambda: [n["name"] for n in call("/graphql", {"query": q, "variables": {"u": OWNER}})["data"]["user"]["pinnedItems"]["nodes"]], [])
+    by = {r["name"]: r for r in own}
+    chosen = ([by[n] for n in pinned if n in by] or own)[:REPO_LIMIT]
+    return dict(
+        repos=user["public_repos"], followers=user["followers"], langs=langs,
+        commits=safe(lambda: call(f"/search/commits?q=author:{OWNER}&per_page=1")["total_count"]),
+        prs=safe(lambda: call(f"/search/issues?q=author:{OWNER}+type:pr&per_page=1")["total_count"], 0),
+        stars=sum(r["stargazers_count"] for r in own),
+        pushed=max((r["pushed_at"] for r in own), default=None),
+        chosen=[dict(name=r["name"], desc=r["description"], lang=r["language"], stars=r["stargazers_count"], pushed=r["pushed_at"]) for r in chosen])
+
+def demo():
+    return dict(repos=4, followers=0, commits=109, prs=0, stars=0, pushed="2026-11-19T10:00:00Z",
+                langs={"Slint": 34000, "Rust": 31000, "Zig": 27000, "Svelte": 6000, "C++": 2000},
+                chosen=[dict(name="пример-проекта", desc="Так будет выглядеть описание вашего репозитория", lang="Rust", stars=3, pushed="2026-11-19T10:00:00Z"),
+                        dict(name="ещё-один", desc=None, lang="Zig", stars=0, pushed="2026-11-12T10:00:00Z")])
+
+# ───────────────────────────── Сборка ─────────────────────────────
+TEMPLATE = """<div align="center">
+
+<!-- BANNER:START -->
+<!-- BANNER:END -->
+
+<!-- REPOS:START -->
+<!-- REPOS:END -->
+
+<!-- STATS:START -->
+<!-- STATS:END -->
+
+<!-- LINKS:START -->
+<!-- LINKS:END -->
+
+</div>
+"""
+
+def link(href, src, alt):
+    return f'<a href="{esc(href)}"><img src="{src}" alt="{esc(alt)}" width="{W}"></a>'
+
+def block(text, name, content):
+    pat = re.compile(rf"(<!-- {name}:START -->).*?(<!-- {name}:END -->)", re.S)
+    if not pat.search(text): sys.exit(f"В README.md нет маркеров {name}")
+    return pat.sub(lambda m: f"{m.group(1)}\n{content}\n{m.group(2)}" if content else f"{m.group(1)}\n{m.group(2)}", text)
+
+def main():
+    mode = "--demo" if "--demo" in sys.argv else "--static" if "--static" in sys.argv else "live"
+    root = Path(os.environ.get("ROOT") or Path(__file__).resolve().parent.parent)
+    out = root / "assets"; out.mkdir(exist_ok=True)
+    readme = root / "README.md"
+    text = readme.read_text(encoding="utf-8") if readme.exists() else TEMPLATE
+    put = lambda name, s: (out / name).write_text(s, encoding="utf-8")
+
+    put("banner.svg", banner())
+    text = block(text, "BANNER", link(SITE, "assets/banner.svg", f"{OWNER}: {BIO} Вайбкод выключен"))
+
+    put("cap-links.svg", caption("Связь"))
+    parts = [f'<img src="assets/cap-links.svg" alt="Связь" width="{W}">']
+    for i, it in enumerate(LINKS):
+        put(f"link-{i}.svg", link_card(it))
+        parts.append(link(it["url"], f"assets/link-{i}.svg", f'{it["title"]}: {it["sub"]}'))
+    text = block(text, "LINKS", "\n".join(parts))
+
+    if mode != "--static":
+        d = demo() if mode == "--demo" else fetch()
+        for f in out.glob("repo-*.svg"): f.unlink()
+        parts = []
+        if d["chosen"]:
+            put("cap-projects.svg", caption("Проекты"))
+            parts.append(f'<img src="assets/cap-projects.svg" alt="Проекты" width="{W}">')
+            for i, r in enumerate(d["chosen"]):
+                put(f"repo-{i}.svg", repo_card(r))
+                parts.append(link(f"https://github.com/{OWNER}/{r['name']}", f"assets/repo-{i}.svg", f'{r["name"]}: {r.get("desc") or "без описания"}'))
+        text = block(text, "REPOS", "\n".join(parts))
+        s, alt = stats_svg(d)
+        put("stats.svg", s)
+        text = block(text, "STATS", link(f"https://github.com/{OWNER}?tab=repositories", "assets/stats.svg", alt))
+    readme.write_text(text, encoding="utf-8")
+    print("готово:", mode)
+
+if __name__ == "__main__":
+    main()
