@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- BANNER:START -->
-<a href="https://pivozavr7.github.io"><img src="assets/banner.svg" alt="pivozavr7: не пишу руками на rust и zig. не вайбкод, всё сам" width="640"></a>
+<a href="https://pivozavr7.github.io"><img src="assets/banner.svg" alt="pkow: не пишу руками на rust и zig. не вайбкод, всё сам" width="640"></a>
 <!-- BANNER:END -->
 
 <!-- REPOS:START -->
@@ -16,7 +16,7 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/github-contribution-grid-snake-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="assets/github-contribution-grid-snake.svg">
-  <img src="assets/github-contribution-grid-snake.svg" alt="змейка ползёт по вкладам за год" width="640">
+  <img src="assets/github-contribution-grid-snake.svg" alt="t" width="640">
 </picture>
 <!-- SNAKE:END -->
 
