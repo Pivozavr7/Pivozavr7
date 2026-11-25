@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Сгенерировать змейку snk
+      - name: сгенерировать змейку snk
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
@@ -28,7 +28,7 @@ jobs:
             assets/github-contribution-grid-snake.svg
             assets/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: Закоммитить, если что-то изменилось
+      - name: закоммитить, если что-то изменилось
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
