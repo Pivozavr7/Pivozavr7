@@ -205,7 +205,12 @@ def snake_svg(weeks):
     и съедает их. По пустым клеткам не ходит — их не видно в маршруте.
     """
     if not weeks: return None
-    grid = [w["contributionDays"] for w in weeks]
+    grid = []                                  # API отдаёт крайние недели укороченными — дополняем до 7
+    for w in weeks:
+        days = list(w.get("contributionDays") or [])[:7]
+        while len(days) < 7:
+            days.append(dict(date=days[-1]["date"] if days else "1970-01-01", contributionCount=0))
+        grid.append(days)
     cols = len(grid)
     if not cols: return None
     act = [(c, r, grid[c][r]["contributionCount"]) for c in range(cols) for r in range(7)
@@ -414,6 +419,7 @@ def main():
 
     for f in out.glob("cap-*.svg"): f.unlink()          # заголовков секций больше нет
     (out / "snake-card.svg").unlink(missing_ok=True)    # и шапки со змейкой тоже
+    (out / "ERROR.txt").unlink(missing_ok=True)         # прошлая ошибка исправлена — файл не нужен
 
     put("banner.svg", banner())
     text = block(text, "BANNER", link(SITE, "assets/banner.svg", BANNER_ALT))
