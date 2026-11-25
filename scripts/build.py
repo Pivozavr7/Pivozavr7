@@ -450,4 +450,21 @@ def main():
     print("готово:", mode)
 
 if __name__ == "__main__":
-    main()
+    tb = None
+    try:
+        main()
+    except SystemExit as e:
+        if e.code in (None, 0): raise
+        tb = f"SystemExit: {e.code}"
+    except Exception:
+        import traceback
+        tb = traceback.format_exc()
+    if tb:                                    # отладка: workflow закоммитит файл, ошибка будет видна
+        print(tb, file=sys.stderr)
+        try:
+            _root = Path(os.environ.get("ROOT") or Path(__file__).resolve().parent.parent)
+            (_root / "assets").mkdir(exist_ok=True)
+            (_root / "assets" / "ERROR.txt").write_text(tb, encoding="utf-8")
+        except Exception as _e:
+            print("не удалось записать ERROR.txt:", _e, file=sys.stderr)
+        sys.exit(0)
