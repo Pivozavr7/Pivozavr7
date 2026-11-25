@@ -9,10 +9,11 @@
 <!-- REPOS:END -->
 
 <!-- STATS:START -->
-<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 114 коммитов. Языки: Slint 34%, Rust 31%, Zig 27%, Svelte 6%, C++ 2%" width="640"></a>
+<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 138 коммитов. Языки: Slint 34%, Rust 31%, Zig 27%, Svelte 6%, C++ 2%" width="640"></a>
 <!-- STATS:END -->
 
 <!-- SNAKE:START -->
+<img src="assets/snake.svg" alt="Змейка ест коммиты за год: 10 дней с активностью" width="640">
 <!-- SNAKE:END -->
 
 <!-- LINKS:START -->
