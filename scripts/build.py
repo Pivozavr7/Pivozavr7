@@ -7,7 +7,7 @@
 
 Всё, что можно менять руками, лежит в блоке «Настройки» ниже.
 """
-import html, json, math, os, re, sys, urllib.request
+import html, json, math, os, re, sys, time, urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -304,13 +304,19 @@ TOKEN = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
 CAL_QUERY = ("query($u:String!){user(login:$u){contributionsCollection{contributionCalendar"
              "{totalContributions weeks{contributionDays{date contributionCount}}}}}}")
 
-def call(path, body=None):
+def call(path, body=None, tries=3):
     url = path if path.startswith("http") else "https://api.github.com" + path
-    h = {"Accept": "application/vnd.github+json", "User-Agent": "profile-build"}
-    if TOKEN: h["Authorization"] = f"Bearer {TOKEN}"
-    req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None, headers=h)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+    for i in range(tries):                      # сеть в CI иногда сбоит — пробуем ещё раз
+        try:
+            h = {"Accept": "application/vnd.github+json", "User-Agent": "profile-build"}
+            if TOKEN: h["Authorization"] = f"Bearer {TOKEN}"
+            req = urllib.request.Request(url, data=json.dumps(body).encode() if body else None, headers=h)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.load(r)
+        except Exception as e:
+            if i == tries - 1: raise
+            print(f"warn: {e}, повтор {i + 1}/{tries - 1}", file=sys.stderr)
+            time.sleep(2 * (i + 1))
 
 def safe(fn, default=None):
     try: return fn()
