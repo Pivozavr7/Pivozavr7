@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- BANNER:START -->
-<a href="https://pivozavr7.github.io"><img src="assets/banner.svg" alt="pkow: не пишу руками на rust и zig. не вайбкод, всё сам" width="640"></a>
+<a href="https://pivozavr7.github.io"><img src="assets/banner.svg" alt="pivozavr7: не пишу руками на rust и zig. не вайбкод, всё сам" width="640"></a>
 <!-- BANNER:END -->
 
 <!-- REPOS:START -->
@@ -9,7 +9,7 @@
 <!-- REPOS:END -->
 
 <!-- STATS:START -->
-<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 145 коммитов. языки: slint 34%, rust 31%, zig 28%, svelte 6%, c++ 2%" width="640"></a>
+<a href="https://github.com/Pivozavr7?tab=repositories"><img src="assets/stats.svg" alt="4 репозиториев, 169 коммитов. языки: slint 32%, zig 31%, rust 29%, svelte 6%, c++ 2%" width="640"></a>
 <!-- STATS:END -->
 
 <!-- SNAKE:START -->
